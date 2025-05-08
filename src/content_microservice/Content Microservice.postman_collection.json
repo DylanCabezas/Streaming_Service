@@ -1,0 +1,200 @@
+{
+	"info": {
+		"_postman_id": "5b9c60d2-849f-4179-b4b4-c67f3a37aa6b",
+		"name": "Content Microservice",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "26899500"
+	},
+	"item": [
+		{
+			"name": "Obtener videos",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/video",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"video"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Poner video",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"title\": \"Prueba2\",\r\n  \"description\": \"Descripción2\",\r\n  \"genre\": \"Acción\",\r\n  \"keywords\": [\"aventura\", \"acción\"],\r\n  \"url\": \"http://ejemplo2.com/video.mp4\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/video",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"video"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Obtener película por ID",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/video/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"video",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Borrar película",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/video/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"video",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Obtener video por género",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/video/genre/acción",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"video",
+						"genre",
+						"acción"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Obtener video con datos",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/video/search?title=Prueba2&genre=NA&keyword=NA",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"video",
+						"search"
+					],
+					"query": [
+						{
+							"key": "title",
+							"value": "Prueba2"
+						},
+						{
+							"key": "genre",
+							"value": "NA"
+						},
+						{
+							"key": "keyword",
+							"value": "NA"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Calificar video",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"videoId\": 1,\r\n    \"score\": 3\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/rating",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"rating"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Obtener toda calificación de video",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/rating/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"rating",
+						"1"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

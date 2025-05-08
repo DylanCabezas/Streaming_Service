@@ -1,0 +1,10 @@
+com\example\videos\service\VideoService.class
+com\example\videos\VideoServiceApplication.class
+com\example\videos\repository\VideoRatingRepository.class
+com\example\videos\config\SecurityConfig.class
+com\example\videos\model\VideoRating.class
+com\example\videos\model\Video.class
+com\example\videos\repository\VideoRepository.class
+com\example\videos\controller\VideoController.class
+com\example\videos\service\VideoRatingService.class
+com\example\videos\controller\VideoRatingController.class
