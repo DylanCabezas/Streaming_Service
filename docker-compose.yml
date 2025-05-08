@@ -33,6 +33,27 @@ services:
     volumes:
       - ./src/user_microservice/schema.sql:/docker-entrypoint-initdb.d/schema.sql  # Monta el archivo schema.sql
 
+  app:
+    build: .
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/video-db
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: postgresql
+ 
+  # Postgres
+  postgres:
+    image: postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgresql
+      POSTGRES_DB: video-db
+    ports:
+      - "5432:5432"
+  
 networks:
   backend:
     driver: bridge
