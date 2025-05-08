@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  # Microservicio 1: user_microservice
+  user_microservice:
+    build:
+      context: ./src/user_microservice
+    container_name: user_microservice-container
+    ports:
+      - "8001:8000"  # Mapea puerto 8000 dentro del contenedor al 8001 en la máquina local
+    depends_on:
+      - mysql  # El microservicio de usuario depende de MySQL
+    environment:
+      DB_HOST: mysql  # Nombre del contenedor de MySQL (debe coincidir con el servicio en Docker Compose)
+      DB_PORT: 3306
+      DB_NAME: user_db
+      DB_USER: user
+      DB_PASSWORD: userpassword
+
+  # MySQL
+  mysql:
+    image: mysql:8.0
+    container_name: mysql-container
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword  # Contraseña para el usuario root
+      MYSQL_DATABASE: user_db  # Nombre de la base de datos que se creará
+      MYSQL_USER: user  # Usuario no-root para la conexión
+      MYSQL_PASSWORD: userpassword  # Contraseña para el usuario
+    ports:
+      - "3306:3306"  # Mapea puerto 3306 del contenedor al puerto 3306 en la máquina local
+    networks:
+      - backend
+    volumes:
+      - ./src/user_microservice/schema.sql:/docker-entrypoint-initdb.d/schema.sql  # Monta el archivo schema.sql
+
+networks:
+  backend:
+    driver: bridge
