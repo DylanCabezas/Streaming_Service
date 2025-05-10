@@ -26,6 +26,10 @@ class Favorite(BaseModel):
     id: int
     video_id: int
 
+@app.get("/")
+def health_check():
+    return {"status": "API is running"}
+
 @app.post("/user")
 def create_user(user: User):
     try:
