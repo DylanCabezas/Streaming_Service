@@ -21,3 +21,5 @@ CREATE TABLE IF NOT EXISTS favorites (
     PRIMARY KEY (id, video_id),
     FOREIGN KEY (id) REFERENCES users(id)
 );
+
+
