@@ -1,5 +1,83 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import UserService from '../../services/userService';  // Importar el servicio de usuario
+import './Favorites.scss';
+
+const Favorites = () => {
+  const [favorites, setFavorites] = useState([]);
+  const userId = 1;  // Suponiendo que tienes el ID del usuario, cámbialo según el usuario autenticado
+
+  useEffect(() => {
+    // Obtener los favoritos del usuario desde la API
+    const fetchFavorites = async () => {
+      try {
+        const favoritesData = await UserService.getFavorites(userId); // Obtener los favoritos usando el servicio
+        setFavorites(favoritesData);  // Guardar los favoritos en el estado
+      } catch (error) {
+        console.error('Error al obtener los favoritos:', error);
+      }
+    };
+
+    fetchFavorites();
+  }, [userId]); // Re-fetch cuando cambie el userId (por ejemplo, cuando el usuario inicie sesión)
+
+  const handleRemoveFromFavorites = async (videoId) => {
+    // Eliminar un video de los favoritos usando el servicio
+    try {
+      await UserService.deleteFavorite(videoId);  // Llamada a la API para eliminar el favorito
+      setFavorites(favorites.filter(video => video.id !== videoId));  // Actualizar el estado eliminando el video
+    } catch (error) {
+      console.error('Error al eliminar el favorito:', error);
+    }
+  };
+
+  return (
+    <div className="favorites-page">
+      <div className="favorites-header">
+        <h1>Mis Favoritos</h1>
+      </div>
+
+      {favorites.length === 0 ? (
+        <div className="empty-favorites">
+          <p>No tienes videos favoritos aún.</p>
+          <Link to="/" className="browse-button">
+            Explorar Contenido
+          </Link>
+        </div>
+      ) : (
+        <div className="favorites-grid">
+          {favorites.map(video => (
+            <div key={video.id} className="favorite-card">
+              <Link to={`/watch/${video.id}`} className="video-link">
+                <div className="thumbnail-container">
+                  <img src={video.thumbnail} alt={video.title} />
+                  <span className="duration">{video.duration}</span>
+                </div>
+                <div className="video-info">
+                  <h3>{video.title}</h3>
+                  <span className="rating">★ {video.rating}</span>
+                </div>
+              </Link>
+              <button
+                className="remove-button"
+                onClick={() => handleRemoveFromFavorites(video.id)}
+              >
+                Eliminar de Favoritos
+              </button>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default Favorites;
+
+
+
+/*import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import './Favorites.scss';
 
 const Favorites = () => {
@@ -101,4 +179,4 @@ const Favorites = () => {
   );
 };
 
-export default Favorites; 
+export default Favorites; */

@@ -4,6 +4,7 @@ import API_CONFIG from '../config/api.config';
 class ApiService {
   constructor() {
     this.axiosInstance = axios.create({
+      baseURL: 'http://localhost:8000/api', //balanceador de carga
       timeout: 10000,
       headers: {
         'Content-Type': 'application/json'
