@@ -1,35 +1,32 @@
 import React, { useEffect, useState } from "react";
-// import RatingForm from "../components/RatingForm";
+import VideoSlider from "../components/VideoSlider";
 import axios from "axios";
-import "../styles/Home.scss";
 
 function Home() {
   const [videos, setVideos] = useState([]);
-  const userId = localStorage.getItem("user_id");
 
   useEffect(() => {
-    axios
-      .get("http://localhost:8000/videos")
-      .then((res) => setVideos(res.data))
-      .catch((err) => console.error("Error al cargar los videos:", err));
+    axios.get("http://localhost:8000/videos").then((res) => {
+      // Puedes mapear para simular thumbnails si no vienen en la API
+      const enriched = res.data.map((v) => ({
+        ...v,
+        thumbnailUrl: `/assets/thumbnails/${v.video_id}.jpg`, // asegúrate de que existan
+      }));
+      setVideos(enriched);
+    });
   }, []);
 
   return (
-    <div className="home-container">
-      <h2 className="home-title">Explora nuestros videos</h2>
-      <div className="video-grid">
-        {videos.map((video) => (
-          <div key={video.video_id} className="video-card">
-            <h3>{video.titulo}</h3>
-            <p>
-              <strong>Género:</strong> {video.genero}
-            </p>
-            <p>{video.descripcion}</p>
-            {/* <RatingForm videoId={video.video_id} /> */}
-            {/* Aquí podrías agregar botón para ver o agregar a favoritos */}
-          </div>
-        ))}
-      </div>
+    <div>
+      <VideoSlider title="Populares" videos={videos.slice(0, 10)} />
+      <VideoSlider
+        title="Acción"
+        videos={videos.filter((v) => v.genre === "acción")}
+      />
+      <VideoSlider
+        title="Comedia"
+        videos={videos.filter((v) => v.genre === "comedia")}
+      />
     </div>
   );
 }

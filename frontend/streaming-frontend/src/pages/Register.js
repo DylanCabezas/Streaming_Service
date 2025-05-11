@@ -1,9 +1,9 @@
+// src/pages/Register.js
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import "../styles/Register.scss";
 
-function Register() {
-  const navigate = useNavigate();
+function Register({ onRegister }) {
   const [form, setForm] = useState({
     username: "",
     email: "",
@@ -11,7 +11,7 @@ function Register() {
     genero: "",
     ciudad: "",
   });
-  const [error, setError] = useState("");
+  const [mensaje, setMensaje] = useState("");
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -20,71 +20,64 @@ function Register() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post("http://localhost:8000/user", form);
-      alert("Usuario registrado exitosamente");
-      navigate("/login");
+      const res = await axios.post("http://localhost:8000/user", form);
+      localStorage.setItem("user_id", res.data.user_id);
+      if (onRegister) onRegister(res.data.user_id);
     } catch (err) {
-      setError("Error al registrar usuario");
-      console.error(err);
+      console.error("Error al registrarse:", err);
+      setMensaje("Ocurrió un error al registrarse.");
     }
   };
 
   return (
-    <div style={{ padding: "2rem" }}>
-      <h2>Registro</h2>
-      {error && <p style={{ color: "red" }}>{error}</p>}
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label>Nombre de usuario:</label>
-          <input
-            type="text"
-            name="username"
-            value={form.username}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <div>
-          <label>Correo electrónico:</label>
-          <input
-            type="email"
-            name="email"
-            value={form.email}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <div>
-          <label>Edad:</label>
-          <input
-            type="number"
-            name="edad"
-            value={form.edad}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <div>
-          <label>Género:</label>
-          <input
-            type="text"
-            name="genero"
-            value={form.genero}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <div>
-          <label>Ciudad:</label>
-          <input
-            type="text"
-            name="ciudad"
-            value={form.ciudad}
-            onChange={handleChange}
-            required
-          />
-        </div>
+    <div className="register-page">
+      <form className="register-form" onSubmit={handleSubmit}>
+        <h2>Regístrate</h2>
+        <input
+          type="text"
+          name="username"
+          placeholder="Nombre de usuario"
+          value={form.username}
+          onChange={handleChange}
+          required
+        />
+        <input
+          type="email"
+          name="email"
+          placeholder="Correo electrónico"
+          value={form.email}
+          onChange={handleChange}
+          required
+        />
+        <input
+          type="number"
+          name="edad"
+          placeholder="Edad"
+          value={form.edad}
+          onChange={handleChange}
+          required
+        />
+        <select
+          name="genero"
+          value={form.genero}
+          onChange={handleChange}
+          required
+        >
+          <option value="">Selecciona género</option>
+          <option value="masculino">Masculino</option>
+          <option value="femenino">Femenino</option>
+          <option value="otro">Otro</option>
+        </select>
+        <input
+          type="text"
+          name="ciudad"
+          placeholder="Ciudad"
+          value={form.ciudad}
+          onChange={handleChange}
+          required
+        />
         <button type="submit">Registrarse</button>
+        {mensaje && <p>{mensaje}</p>}
       </form>
     </div>
   );

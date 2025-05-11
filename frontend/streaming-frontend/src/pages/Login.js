@@ -1,54 +1,53 @@
 import React, { useState } from "react";
-import API from "../services/api";
-import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import "../styles/Login.scss"; // Importa los estilos
 
-function Login() {
+function Login({ onLogin }) {
   const [email, setEmail] = useState("");
-  const [username, setUsername] = useState("");
-  const [userId, setUserId] = useState(null);
-  const navigate = useNavigate();
+  const [usuario, setUsuario] = useState("");
+  const [mensaje, setMensaje] = useState("");
 
-  const handleLogin = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-
-    API.get("/users")
-      .then((res) => {
-        const user = res.data.find(
-          (u) => u.email === email && u.username === username
-        );
-        if (user) {
-          setUserId(user.user_id);
-          localStorage.setItem("user_id", user.user_id);
-          navigate("/");
-        } else {
-          alert("Usuario no encontrado");
-        }
-      })
-      .catch((err) => console.error(err));
+    try {
+      const res = await axios.get("http://localhost:8000/users");
+      const user = res.data.find(
+        (u) => u.email === email && u.username === usuario
+      );
+      if (user) {
+        localStorage.setItem("user_id", user.user_id);
+        onLogin(user.user_id); 
+      } else {
+        setMensaje("Credenciales incorrectas.");
+      }
+    } catch (error) {
+      console.error("Error al iniciar sesión:", error);
+      setMensaje("Ocurrió un error.");
+    }
   };
 
   return (
-    <form onSubmit={handleLogin}>
-      <h2>Iniciar sesión</h2>
-      <input
-        type="text"
-        placeholder="Nombre de usuario"
-        value={username}
-        onChange={(e) => setUsername(e.target.value)}
-        required
-      />
-      <input
-        type="email"
-        placeholder="Correo electrónico"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        required
-      />
-      <button type="submit">Entrar</button>
-      <p>
-        ¿No tienes cuenta? <a href="/register">Regístrate aquí</a>
-      </p>
-    </form>
+    <div className="login-page">
+      <form className="login-form" onSubmit={handleSubmit}>
+        <h2>Iniciar sesión</h2>
+        <input
+          type="text"
+          placeholder="Usuario"
+          value={usuario}
+          onChange={(e) => setUsuario(e.target.value)}
+          required
+        />
+        <input
+          type="email"
+          placeholder="Correo electrónico"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
+        />
+        <button type="submit">Entrar</button>
+        {mensaje && <p>{mensaje}</p>}
+      </form>
+    </div>
   );
 }
 

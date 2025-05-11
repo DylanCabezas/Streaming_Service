@@ -1,0 +1,39 @@
+// .video-slider {
+//   padding: 1.5rem 2rem;
+//   color: white;
+// }
+
+// .video-slider h3 {
+//   font-size: 1.2rem;
+//   margin-bottom: 1rem;
+// }
+
+.video-row {
+  display: flex;
+  overflow-x: auto;
+  padding-bottom: 1rem;
+}
+
+.video-row::-webkit-scrollbar {
+  height: 8px;
+}
+
+.video-row::-webkit-scrollbar-thumb {
+  background-color: #555;
+  border-radius: 4px;
+}
+
+.video-slider {
+  padding: 1.5rem 2rem;
+  color: white;
+
+  h3 {
+    font-size: 1.3rem;
+    margin-bottom: 1rem;
+  }
+
+  .slick-slide {
+    padding-right: 10px;
+  }
+}
+

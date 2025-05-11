@@ -1,25 +1,41 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import "../styles/Header.scss"; // Estilos del header/navbar
 
 function Navbar() {
+  const navigate = useNavigate();
+  const userId = localStorage.getItem("user_id");
+
+  const handleLogout = () => {
+    localStorage.removeItem("user_id");
+    navigate("/login");
+  };
+
   return (
-    <nav style={{ backgroundColor: "#000", padding: "10px" }}>
-      <Link to="/" style={{ color: "white", marginRight: "10px" }}>
-        Inicio
+    <header className="header">
+      <Link to="/" className="logo">
+        OWOWOWO
       </Link>
-      <Link to="/favorites" style={{ color: "white", marginRight: "10px" }}>
-        Favoritos
-      </Link>
-      <Link to="/profile" style={{ color: "white", marginRight: "10px" }}>
-        Perfil
-      </Link>
-      <Link to="/login" style={{ color: "white", marginRight: "10px" }}>
-        Login
-      </Link>
-      <Link to="/register" style={{ color: "white" }}>
-        Registro
-      </Link>
-    </nav>
+      <nav className="nav-links">
+        <Link to="/">Inicio</Link>
+        {userId && (
+          <>
+            <Link to="/favorites">Favoritos</Link>
+            <Link to="/historial">Historial</Link>
+            <Link to="/profile">Perfil</Link>
+            <a href="#logout" onClick={handleLogout}>
+              Cerrar sesión
+            </a>
+          </>
+        )}
+        {!userId && (
+          <>
+            <Link to="/login">Iniciar sesión</Link>
+            <Link to="/register">Registrarse</Link>
+          </>
+        )}
+      </nav>
+    </header>
   );
 }
 
