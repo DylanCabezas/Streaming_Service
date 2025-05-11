@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import './Register.scss';
+import UserService from '../services/userService';
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -26,6 +27,20 @@ const Register = () => {
       alert('Las contraseñas no coinciden');
       return;
     }
+    try {
+      const result = await UserService.createUser(formData);
+      console.log('Usuario creado:', result);
+    } catch (error) {
+      console.error('Error al crear el usuario:', error);
+    }
+  };
+
+  /*const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (formData.password !== formData.confirmPassword) {
+      alert('Las contraseñas no coinciden');
+      return;
+    }
     // TODO: Implement register logic with backend
     try {
       // const response = await fetch('/api/register', {
@@ -40,7 +55,7 @@ const Register = () => {
     } catch (error) {
       console.error('Register error:', error);
     }
-  };
+  };*/
 
   return (
     <div className="register-page">

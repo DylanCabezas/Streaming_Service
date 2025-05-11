@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import userService from '../../services/userService'; // Importa el servicio de usuario
 import './Profile.scss';
 
 const Profile = () => {
@@ -15,18 +16,18 @@ const Profile = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // TODO: Fetch user data from API
-    // This is mock data for now
-    const mockUser = {
-      id: 1,
-      username: "usuario123",
-      email: "usuario@example.com",
-      edad: 25,
-      genero: "masculino",
-      ciudad: "Madrid"
+    // Obtener los datos del usuario desde la API usando el userService
+    const fetchUserData = async () => {
+      try {
+        const response = await userService.getUserById(1); // 1 es el ID del usuario
+        setUser(response.user);
+        setFormData(response.user);
+      } catch (error) {
+        console.error('Error al obtener los datos del usuario:', error);
+      }
     };
-    setUser(mockUser);
-    setFormData(mockUser);
+
+    fetchUserData();
   }, []);
 
   const handleChange = (e) => {
@@ -38,39 +39,26 @@ const Profile = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // TODO: Implement update profile API call
     try {
-      // const response = await fetch(`/api/user/${user.id}`, {
-      //   method: 'PATCH',
-      //   headers: { 'Content-Type': 'application/json' },
-      //   body: JSON.stringify(formData)
-      // });
-      // if (response.ok) {
-      //   setUser(formData);
-      //   setIsEditing(false);
-      // }
-      console.log('Profile update:', formData);
-      setUser(formData);
-      setIsEditing(false);
+      const response = await userService.updateUser(user.id, formData);
+      if (response.message === "User updated successfully") {
+        setUser(formData);
+        setIsEditing(false);
+      }
     } catch (error) {
-      console.error('Profile update error:', error);
+      console.error('Error al actualizar el perfil:', error);
     }
   };
 
   const handleDeleteAccount = async () => {
     if (window.confirm('¿Estás seguro de que quieres eliminar tu cuenta? Esta acción no se puede deshacer.')) {
-      // TODO: Implement delete account API call
       try {
-        // const response = await fetch(`/api/user/${user.id}`, {
-        //   method: 'DELETE'
-        // });
-        // if (response.ok) {
-        //   navigate('/login');
-        // }
-        console.log('Account deleted');
-        navigate('/login');
+        const response = await userService.deleteUser(user.id);
+        if (response.message === "User deleted successfully") {
+          navigate('/login');
+        }
       } catch (error) {
-        console.error('Delete account error:', error);
+        console.error('Error al eliminar la cuenta:', error);
       }
     }
   };
@@ -204,4 +192,4 @@ const Profile = () => {
   );
 };
 
-export default Profile; 
+export default Profile;
