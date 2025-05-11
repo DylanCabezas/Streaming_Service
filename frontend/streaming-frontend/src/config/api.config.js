@@ -62,11 +62,13 @@ const API_CONFIG = {
   },
 
   // History Service
-  HISTORY_SERVICE: {
-    BASE_URL: process.env.REACT_APP_HISTORY_SERVICE_URL || 'http://localhost:3001',
+  HISTORIAL_SERVICE: {
+    BASE_URL: "http://localhost:5000/api",  //balanceador
     ENDPOINTS: {
-      HISTORY: '/history',
-      WATCH: '/watch'
+      GET_HISTORIAL: "/historial",  // Obtener historial de un usuario
+      ADD_HISTORIAL: "/historial",  // Agregar un video al historial
+      CLEAR_HISTORIAL: "/historial",  // Limpiar historial de un usuario
+      REMOVE_VIDEO_FROM_HISTORIAL: "/historial"  // Eliminar un video específico del historial
     }
   }
 };
