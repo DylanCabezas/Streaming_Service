@@ -13,7 +13,7 @@ services:
       - mysql 
     environment:
       DB_HOST: mysql  
-      DB_PORT: 3306
+      DB_PORT: 3333
       DB_NAME: user_db
       DB_USER: user
       DB_PASSWORD: userpassword
@@ -29,7 +29,7 @@ services:
       MYSQL_USER: user 
       MYSQL_PASSWORD: userpassword  
     ports:
-      - "3306:3306" 
+      - "3333:3306" 
     networks:
       - backend
     volumes:
