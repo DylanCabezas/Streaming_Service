@@ -11,6 +11,7 @@ FROM node:20
 WORKDIR /app
 COPY --from=builder /app/dist ./dist
 COPY package*.json ./
+COPY swagger.yaml ./
 RUN npm install --omit=dev
 ENV NODE_ENV=production
 

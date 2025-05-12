@@ -6,10 +6,12 @@ import YAML from "yamljs";
 import swaggerUi from "swagger-ui-express";
 import path from "path";
 import { RequestHandler } from "express";
+import cors from "cors";
 
 dotenv.config();
 
 const app = express();
+app.use(cors());
 app.use(express.json());
 
 const swaggerDocument = YAML.load(path.join(__dirname, "../swagger.yaml"));

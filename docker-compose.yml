@@ -58,6 +58,30 @@ services:
     ports:
       - "5432:5432"
 
+  # Historial Microservice (Node + Mongo)
+  historial-service:
+    build:
+      context: ./backend/historial-service
+      dockerfile: Dockerfile
+    container_name: historial-service-container
+    ports:
+      - "3001:3000"
+    depends_on:
+      - mongo
+    environment:
+      MONGODB_URI: mongodb://mongo:27017/historial_db
+    networks:
+      - backend
+
+  # MongoDB
+  mongo:
+    image: mongo:6.0
+    container_name: mongo
+    ports:
+      - "27017:27017"
+    networks:
+      - backend
+
 networks:
   backend:
     driver: bridge
