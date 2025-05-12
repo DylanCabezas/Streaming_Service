@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   # Microservicio 1: user_microservice
-  user_microservice:
+  user-service:
     build:
       context: ./backend/user_microservice
       dockerfile: Dockerfile
@@ -13,7 +13,7 @@ services:
       - mysql 
     environment:
       DB_HOST: mysql  
-      DB_PORT: 3333
+      DB_PORT: 3306
       DB_NAME: user_db
       DB_USER: user
       DB_PASSWORD: userpassword
@@ -35,7 +35,7 @@ services:
     volumes:
       - ./backend/user_microservice/schema.sql:/docker-entrypoint-initdb.d/schema.sql  
 
-  app:
+  content-service:
     build:
       context: ./backend/content_microservice
       dockerfile: Dockerfile
@@ -47,6 +47,8 @@ services:
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/video-db
       SPRING_DATASOURCE_USERNAME: postgres
       SPRING_DATASOURCE_PASSWORD: postgresql
+    networks:
+      - backend
 
   # Postgres
   postgres:
@@ -57,6 +59,8 @@ services:
       POSTGRES_DB: video-db
     ports:
       - "5432:5432"
+    networks:
+      - backend
 
   # Historial Microservice (Node + Mongo)
   historial-service:
