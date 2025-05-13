@@ -1,7 +1,23 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
-from typing import List
+from typing import List, Optional
 import mysql.connector
+from fastapi.middleware.cors import CORSMiddleware
+
+app = FastAPI()
+
+# 1. Configura los orígenes permitidos
+origins = [
+    "*",    
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,            # lista de orígenes permitidos
+    allow_credentials=True,           # si envías cookies, auth headers, etc.
+    allow_methods=["*"],              # o ["GET","POST","PUT",...]
+    allow_headers=["*"],              # o especifica cabeceras concretas
+)
 
 # Configuración de la base de datos
 host_name = "mysql"  # Nombre del servicio de MySQL en Docker Compose
@@ -10,10 +26,26 @@ user_name = "user"
 password_db = "userpassword"
 database_name = "user_db"
 
-app = FastAPI()
-
 # Modelos de datos
 class User(BaseModel):
+    id: int
+    username: str
+    email: str
+    edad: int
+    genero: str
+    ciudad: str
+    video_id: List[int]
+
+class UserCreate(BaseModel):
+    username: str
+    email: str
+    password: str
+    edad: int
+    genero: str
+    ciudad: str
+    video_id: Optional[List[int]] = []   # si quieres aceptar favoritos al crear
+
+class UserRead(BaseModel):
     id: int
     username: str
     email: str
@@ -26,32 +58,73 @@ class Favorite(BaseModel):
     id: int
     video_id: int
 
+class UserLogin(BaseModel):
+    email: str
+    password: str
+
 @app.get("/")
 def health_check():
     return {"status": "API is running"}
 
-@app.post("/user")
-def create_user(user: User):
+@app.post("/login")
+def login(credentials: UserLogin):
+    # Conexión MySQL con parámetros válidos
+    db = mysql.connector.connect(host=host_name, port=port_number, user=user_name, password=password_db, database=database_name)
+    cursor = db.cursor(dictionary=True)
+    cursor.execute(
+      "SELECT * FROM users WHERE email=%s AND password=%s",
+      (credentials.email, credentials.password)
+    )
+    user = cursor.fetchone()
+    cursor.close()
+    db.close()
+    if not user:
+        raise HTTPException(status_code=401, detail="Credenciales inválidas")
+    return {"message": "Login exitoso", "user": user}
+
+
+@app.post("/user", response_model=UserRead, status_code=201)
+def create_user(user: UserCreate):
     try:
         db = mysql.connector.connect(host=host_name, port=port_number, user=user_name, password=password_db, database=database_name)
         cursor = db.cursor()
+        # Inserta contraseña — aunque en claro (mejor usa hashing en prod)
         cursor.execute("""
-            INSERT INTO users (id, username, email, edad, genero, ciudad)
+            INSERT INTO users (username, email, password, edad, genero, ciudad)
             VALUES (%s, %s, %s, %s, %s, %s)
-        """, (user.id, user.username, user.email, user.edad, user.genero, user.ciudad))
-        
-        for video_id in user.video_id:
-            cursor.execute("""
-                INSERT INTO favorites (id, video_id) 
-                VALUES (%s, %s)
-            """, (user.id, video_id))
+        """, (
+            user.username,
+            user.email,
+            user.password,
+            user.edad,
+            user.genero,
+            user.ciudad
+        ))
+        user_id = cursor.lastrowid
+
+        # Si enviaron video_id, lo insertas en favoritos
+        for vid in user.video_id or []:
+            cursor.execute(
+                "INSERT INTO favorites (user_id, video_id) VALUES (%s, %s)",
+                (user_id, vid)
+            )
 
         db.commit()
         cursor.close()
         db.close()
-        return {"message": "User created successfully"}
+
+        return UserRead(
+          id=user_id,
+          username=user.username,
+          email=user.email,
+          edad=user.edad,
+          genero=user.genero,
+          ciudad=user.ciudad,
+          video_id=user.video_id or []
+        )
     except Exception as e:
         return {"error": str(e)}
+
 
 @app.get("/users")
 def get_users():
