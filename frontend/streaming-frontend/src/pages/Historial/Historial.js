@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import HistorialService from '../../services/historialService';  
+import HistorialService from '../../services/historial.services';  
 import './Historial.scss';
+import { Link } from 'react-router-dom';
 
 const Historial = () => {
   const [history, setHistory] = useState([]);

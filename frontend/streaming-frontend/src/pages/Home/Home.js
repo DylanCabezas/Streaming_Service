@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Slider from 'react-slick';
-import ContentService from '../../services/contentService';  // Importa el ContentService
+import ContentService from '../../services/content.service';  // Importa el ContentService
 import './Home.scss';
 
 const Home = () => {

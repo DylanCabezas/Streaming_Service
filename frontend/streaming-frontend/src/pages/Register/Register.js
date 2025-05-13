@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import './Register.scss';
-import UserService from '../services/userService';
+import UserService from '../../services/user.service';
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -27,8 +27,23 @@ const Register = () => {
       alert('Las contraseñas no coinciden');
       return;
     }
+
+    // Construye el body con los nombres que el backend espera:
+    const payload = {
+      username: formData.username,
+      email: formData.email,
+      password: formData.password,
+      edad: parseInt(formData.age, 10),     // convierte a número
+      genero: formData.gender,
+      ciudad: formData.city,
+      video_id: formData.videoIdList        // o []
+    };
+
+    console.log(payload);
+
+
     try {
-      const result = await UserService.createUser(formData);
+      const result = await UserService.createUser(payload);
       console.log('Usuario creado:', result);
     } catch (error) {
       console.error('Error al crear el usuario:', error);

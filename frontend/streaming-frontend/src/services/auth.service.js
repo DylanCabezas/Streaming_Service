@@ -30,16 +30,6 @@ class AuthService {
     }
   }
 
-  async verifyToken() {
-    try {
-      const response = await apiService.get(
-        `${API_CONFIG.AUTH_SERVICE.BASE_URL}${API_CONFIG.AUTH_SERVICE.ENDPOINTS.VERIFY_TOKEN}`
-      );
-      return response.data;
-    } catch (error) {
-      throw this.handleError(error);
-    }
-  }
 
   isAuthenticated() {
     return !!localStorage.getItem('token');

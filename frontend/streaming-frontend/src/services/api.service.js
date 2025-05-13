@@ -4,7 +4,7 @@ import API_CONFIG from '../config/api.config';
 class ApiService {
   constructor() {
     this.axiosInstance = axios.create({
-      baseURL: 'http://localhost:8000/api', //balanceador de carga
+      baseURL: 'http://localhost:8001', //balanceador de carga
       timeout: 10000,
       headers: {
         'Content-Type': 'application/json'
@@ -58,10 +58,9 @@ class ApiService {
   // Auth methods
   async login(credentials) {
     const response = await this.axiosInstance.post(
-      `${API_CONFIG.AUTH_SERVICE.BASE_URL}${API_CONFIG.AUTH_SERVICE.ENDPOINTS.LOGIN}`,
+      `${API_CONFIG.USER_SERVICE.BASE_URL}${API_CONFIG.USER_SERVICE.ENDPOINTS.LOGIN}`,
       credentials
     );
-    this.setTokens(response.data);
     return response.data;
   }
 
@@ -83,22 +82,8 @@ class ApiService {
     }
   }
 
-  async refreshToken(refreshToken) {
-    return this.axiosInstance.post(
-      `${API_CONFIG.AUTH_SERVICE.BASE_URL}${API_CONFIG.AUTH_SERVICE.ENDPOINTS.REFRESH_TOKEN}`,
-      { refreshToken }
-    );
-  }
 
-  // Helper methods
-  setTokens(data) {
-    if (data.token) {
-      localStorage.setItem('token', data.token);
-    }
-    if (data.refreshToken) {
-      localStorage.setItem('refreshToken', data.refreshToken);
-    }
-  }
+
 
   handleLogout() {
     localStorage.removeItem('token');

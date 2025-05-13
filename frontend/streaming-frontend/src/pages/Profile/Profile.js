@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import userService from '../../services/userService'; // Importa el servicio de usuario
+import userService from '../../services/user.service'; // Importa el servicio de usuario
 import './Profile.scss';
 
 const Profile = () => {
