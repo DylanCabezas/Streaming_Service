@@ -11,7 +11,8 @@ CREATE TABLE IF NOT EXISTS users (
     email VARCHAR(100),
     edad INT,
     genero VARCHAR(10),
-    ciudad VARCHAR(100)
+    ciudad VARCHAR(100),
+    password VARCHAR(255) 
 );
 
 -- Crear la tabla 'favorites'
@@ -21,5 +22,3 @@ CREATE TABLE IF NOT EXISTS favorites (
     PRIMARY KEY (id, video_id),
     FOREIGN KEY (id) REFERENCES users(id)
 );
-
-
