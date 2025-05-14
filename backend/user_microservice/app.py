@@ -4,7 +4,7 @@ from typing import List
 import mysql.connector
 
 # Configuración de la base de datos
-host_name = "mysql"  # Nombre del servicio de MySQL en Docker Compose
+host_name = "mysql"  
 port_number = 3306
 user_name = "user"
 password_db = "userpassword"
@@ -20,6 +20,7 @@ class User(BaseModel):
     edad: int
     genero: str
     ciudad: str
+    password: str 
     video_id: List[int]
 
 class Favorite(BaseModel):
@@ -36,10 +37,9 @@ def create_user(user: User):
         db = mysql.connector.connect(host=host_name, port=port_number, user=user_name, password=password_db, database=database_name)
         cursor = db.cursor()
         cursor.execute("""
-            INSERT INTO users (id, username, email, edad, genero, ciudad)
-            VALUES (%s, %s, %s, %s, %s, %s)
-        """, (user.id, user.username, user.email, user.edad, user.genero, user.ciudad))
-        
+            INSERT INTO users (id, username, email, edad, genero, ciudad, password)
+            VALUES (%s, %s, %s, %s, %s, %s, %s)
+        """, (user.id, user.username, user.email, user.edad, user.genero, user.ciudad, user.password)) 
         for video_id in user.video_id:
             cursor.execute("""
                 INSERT INTO favorites (id, video_id) 
@@ -91,9 +91,9 @@ def update_user(user_id: int, user: User):
         cursor = db.cursor()
         cursor.execute("""
             UPDATE users
-            SET username = %s, email = %s, edad = %s, genero = %s, ciudad = %s
+            SET username = %s, email = %s, edad = %s, genero = %s, ciudad = %s, password = %s
             WHERE id = %s
-        """, (user.username, user.email, user.edad, user.genero, user.ciudad, user_id))
+        """, (user.username, user.email, user.edad, user.genero, user.ciudad, user.password, user_id))  # Actualizar el password
         
         # Eliminar los favoritos actuales
         cursor.execute("DELETE FROM favorites WHERE id = %s", (user_id,))
