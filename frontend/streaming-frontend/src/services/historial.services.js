@@ -1,54 +1,33 @@
-// services/historialService.js
-import apiService from './api.service';  
+import { historialAPI } from './api.service';
 
 class HistorialService {
-  // Agregar un video al historial
   async addToHistorial(userId, videoId) {
-    try {
-      const response = await apiService.post('/historial', {
-        user_id: userId,
-        video_id: videoId,
-      });
-      return response.data;
-    } catch (error) {
-      console.error('Error al agregar al historial:', error);
-    }
+    const response = await historialAPI.post('/historial', {
+      user_id: userId,
+      video_id: videoId,
+    });
+    return response.data;
   }
 
-  // Obtener el historial de un usuario
   async getHistorial(userId) {
-    try {
-      const response = await apiService.get('/historial', {
-        params: { user_id: userId },
-      });
-      return response.data;
-    } catch (error) {
-      console.error('Error al obtener el historial:', error);
-    }
+    const response = await historialAPI.get('/historial', {
+      params: { user_id: userId },
+    });
+    return response.data;
   }
 
-  // Eliminar todo el historial de un usuario
   async clearHistorial(userId) {
-    try {
-      const response = await apiService.delete('/historial', {
-        params: { user_id: userId },
-      });
-      return response.data;
-    } catch (error) {
-      console.error('Error al eliminar el historial:', error);
-    }
+    const response = await historialAPI.delete('/historial', {
+      params: { user_id: userId },
+    });
+    return response.data;
   }
 
-  // Eliminar un video específico del historial
   async removeFromHistorial(userId, videoId) {
-    try {
-      const response = await apiService.put(`/historial/${videoId}`, {
-        user_id: userId,
-      });
-      return response.data;
-    } catch (error) {
-      console.error('Error al eliminar el video del historial:', error);
-    }
+    const response = await historialAPI.put(`/historial/${videoId}`, {
+      user_id: userId,
+    });
+    return response.data;
   }
 }
 

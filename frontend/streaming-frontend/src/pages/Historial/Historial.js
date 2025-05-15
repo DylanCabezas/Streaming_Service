@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import HistorialService from '../../services/historialService';  
+import HistorialService from '../../services/historial.services';  
+import { Link } from 'react-router-dom'; 
 import './Historial.scss';
 
 const Historial = () => {

@@ -1,10 +1,10 @@
-import apiService from './api.service';
+import { userAPI } from './api.service';
 import API_CONFIG from '../config/api.config';
 
 class AuthService {
   async login(email, password) {
     try {
-      const response = await apiService.login({ email, password });
+      const response = await userAPI.post(API_CONFIG.USER_SERVICE.ENDPOINTS.LOGIN, { email, password });
       return response;
     } catch (error) {
       throw this.handleError(error);
@@ -13,7 +13,7 @@ class AuthService {
 
   async register(userData) {
     try {
-      const response = await apiService.register(userData);
+      const response = await userAPI.post(API_CONFIG.USER_SERVICE.ENDPOINTS.REGISTER, userData);
       return response;
     } catch (error) {
       throw this.handleError(error);
@@ -22,19 +22,16 @@ class AuthService {
 
   async logout() {
     try {
-      await apiService.logout();
+      await userAPI.post(API_CONFIG.USER_SERVICE.ENDPOINTS.LOGOUT);
     } catch (error) {
       console.error('Logout error:', error);
-      // Still clear local storage even if the API call fails
-      apiService.handleLogout();
+      this.handleLogout();
     }
   }
 
   async verifyToken() {
     try {
-      const response = await apiService.get(
-        `${API_CONFIG.AUTH_SERVICE.BASE_URL}${API_CONFIG.AUTH_SERVICE.ENDPOINTS.VERIFY_TOKEN}`
-      );
+      const response = await userAPI.get(API_CONFIG.USER_SERVICE.ENDPOINTS.VERIFY_TOKEN);
       return response.data;
     } catch (error) {
       throw this.handleError(error);
@@ -47,28 +44,30 @@ class AuthService {
 
   handleError(error) {
     if (error.response) {
-      // The request was made and the server responded with a status code
-      // that falls out of the range of 2xx
       const { data, status } = error.response;
       return {
         message: data.message || 'An error occurred',
         status,
-        data
+        data,
       };
     } else if (error.request) {
-      // The request was made but no response was received
       return {
         message: 'No response from server',
-        status: 0
+        status: 0,
       };
     } else {
-      // Something happened in setting up the request that triggered an Error
       return {
         message: error.message || 'An error occurred',
-        status: 0
+        status: 0,
       };
     }
   }
+
+  handleLogout() {
+    localStorage.removeItem('token');
+    localStorage.removeItem('refreshToken');
+    window.location.href = '/login';
+  }
 }
 
-export default new AuthService(); 
+export default new AuthService();

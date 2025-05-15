@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import UserService from '../../services/userService';  // Importar el servicio de usuario
+import UserService from '../../services/user.service';  // Importar el servicio de usuari
 import './Favorites.scss';
 
 const Favorites = () => {

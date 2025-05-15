@@ -35,6 +35,7 @@ services:
     volumes:
       - ./backend/user_microservice/schema.sql:/docker-entrypoint-initdb.d/schema.sql  
 
+  # Microservicio 2: content_microservice
   content-service:
     build:
       context: ./backend/content_microservice
@@ -62,7 +63,7 @@ services:
     networks:
       - backend
 
-  # Historial Microservice (Node + Mongo)
+  # Microservicio 3: Historial Microservice (Node + Mongo)
   historial-service:
     build:
       context: ./backend/historial-service
@@ -85,6 +86,7 @@ services:
       - "27017:27017"
     networks:
       - backend
+
 
 networks:
   backend:
