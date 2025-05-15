@@ -34,7 +34,6 @@ public class VideoService {
         return videoRepository.findByGenreIgnoreCase(genre);
     }
 
-    // Nuevo método para búsqueda combinada
     public List<Video> searchVideos(String title, String genre, String keyword) {
         return videoRepository.searchVideos(title, genre, keyword);
     }

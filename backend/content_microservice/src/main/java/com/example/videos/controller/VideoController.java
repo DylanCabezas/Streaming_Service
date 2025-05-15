@@ -1,5 +1,4 @@
 package com.example.videos.controller;
-
 import com.example.videos.model.Video;
 import com.example.videos.service.VideoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +19,11 @@ public class VideoController {
         return videoService.addVideo(video);
     }
 
+    @GetMapping("/health")
+    public ResponseEntity<String> healthCheck() {
+        return ResponseEntity.ok("Content service is healthy");
+    }
+    
     @GetMapping("/{id}")
     public ResponseEntity<Video> getVideo(@PathVariable Long id) {
         return videoService.getVideo(id)

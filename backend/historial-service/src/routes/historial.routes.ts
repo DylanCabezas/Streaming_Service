@@ -5,17 +5,21 @@ import { Historial, IHistorial } from "../models/historial.model";
 const router = express.Router();
 
 // URLs de tus microservicios (ajusta puertos o nombres de servicio de Docker)
-const USER_SERVICE_URL = "http://localhost:4000/users";
-const CONTENT_SERVICE_URL = "http://localhost:5000/videos";
+const USER_SERVICE_URL = "http://user-service:8000/user";
+const CONTENT_SERVICE_URL = "http://content-service:8080/video";
 
 /**
  * Helper para validar que un usuario exista.
  */
 async function validateUser(userId: string): Promise<boolean> {
+  const url = `${USER_SERVICE_URL}/${userId}`;
+  console.log("→ validateUser: GET", url);
   try {
-    const { data } = await axios.get(`${USER_SERVICE_URL}/${userId}`);
-    return !!data;
-  } catch {
+    const { data } = await axios.get(url, { timeout: 2000 });
+    console.log("✅ user exists:", data);
+    return true;
+  } catch (err: any) {
+    console.error("❌ validateUser error:", err.code || err.response?.status, err.message);
     return false;
   }
 }
@@ -24,13 +28,19 @@ async function validateUser(userId: string): Promise<boolean> {
  * Helper para validar que un video exista.
  */
 async function validateVideo(videoId: string): Promise<boolean> {
+  const url = `${CONTENT_SERVICE_URL}/${videoId}`;
+  console.log("→ validateVideo: GET", url);
   try {
-    const { data } = await axios.get(`${CONTENT_SERVICE_URL}/${videoId}`);
+    const { data } = await axios.get(url, { timeout: 2000 });
     return !!data;
   } catch {
     return false;
   }
 }
+
+router.get("/health", (_req: Request, res: Response) => {
+  res.status(200).json({ status: "Historial service is healthy" });
+});
 
 // POST /historial
 router.post("/", async (req: Request, res: Response) => {
@@ -102,5 +112,18 @@ router.put("/:video_id", async (req: Request, res: Response) => {
 
   res.json({ message: "Video eliminado del historial" });
 });
+
+
+// GET /historial/all → Retorna todos los historiales completos
+router.get("/all", async (_req: Request, res: Response) => {
+  try {
+    const historiales = await Historial.find();
+    res.json(historiales);
+  } catch (err) {
+    console.error("Error al obtener historiales:", err);
+    res.status(500).json({ error: "Error interno al obtener historiales" });
+  }
+});
+
 
 export default router;

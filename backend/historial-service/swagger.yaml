@@ -9,41 +9,47 @@ paths:
       summary: Agregar un video al historial
       operationId: addToHistorial
       requestBody:
-        description: Video para agregar al historial
+        required: true
         content:
           application/json:
             schema:
               type: object
+              required:
+                - user_id
+                - video_id
               properties:
+                user_id:
+                  type: string
+                  description: ID del usuario
+                  example: "1"
                 video_id:
-                  type: integer
-                title:
                   type: string
-                genre:
-                  type: string
+                  description: ID del video
+                  example: "42"
       responses:
-        '200':
+        '201':
           description: Video agregado al historial
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                  video:
-                    type: object
-                    properties:
-                      video_id:
-                        type: integer
-                      title:
-                        type: string
-                      genre:
-                        type: string
-
+                $ref: '#/components/schemas/Historial'
+        '404':
+          description: Usuario o video no encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
     get:
-      summary: Obtener el historial de videos
+      summary: Obtener el historial de videos de un usuario
       operationId: getHistorial
+      parameters:
+        - name: user_id
+          in: query
+          description: ID del usuario
+          required: true
+          schema:
+            type: string
+            example: "1"
       responses:
         '200':
           description: Lista de videos en el historial
@@ -52,21 +58,27 @@ paths:
               schema:
                 type: array
                 items:
-                  type: object
-                  properties:
-                    video_id:
-                      type: integer
-                    title:
-                      type: string
-                    genre:
-                      type: string
-
+                  $ref: '#/components/schemas/VideoEntry'
+        '404':
+          description: Usuario no encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
     delete:
-      summary: Eliminar todos los videos del historial
+      summary: Eliminar todo el historial de un usuario
       operationId: deleteHistorial
+      parameters:
+        - name: user_id
+          in: query
+          description: ID del usuario
+          required: true
+          schema:
+            type: string
+            example: "1"
       responses:
         '200':
-          description: Historial de videos eliminado
+          description: Historial eliminado exitosamente
           content:
             application/json:
               schema:
@@ -74,7 +86,13 @@ paths:
                 properties:
                   message:
                     type: string
-                    example: "Historial eliminado exitosamente"
+                    example: "Historial eliminado"
+        '404':
+          description: Usuario no encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
 
   /historial/{video_id}:
     put:
@@ -83,10 +101,18 @@ paths:
       parameters:
         - name: video_id
           in: path
-          description: ID del video que se quiere eliminar del historial
+          description: ID del video a eliminar
           required: true
           schema:
-            type: integer
+            type: string
+            example: "42"
+        - name: user_id
+          in: query
+          description: ID del usuario
+          required: true
+          schema:
+            type: string
+            example: "1"
       responses:
         '200':
           description: Video eliminado del historial
@@ -97,4 +123,39 @@ paths:
                 properties:
                   message:
                     type: string
-                    example: "Video eliminado exitosamente"
+                    example: "Video eliminado del historial"
+        '404':
+          description: Usuario o video no encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+components:
+  schemas:
+    VideoEntry:
+      type: object
+      properties:
+        video_id:
+          type: string
+          description: ID del video
+        watched_at:
+          type: string
+          format: date-time
+          description: Fecha y hora en que fue visto
+    Historial:
+      type: object
+      properties:
+        user_id:
+          type: string
+          description: ID del usuario
+        videos:
+          type: array
+          items:
+            $ref: '#/components/schemas/VideoEntry'
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Mensaje de error

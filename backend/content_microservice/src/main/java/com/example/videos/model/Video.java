@@ -1,6 +1,6 @@
 package com.example.videos.model;
 
-import jakarta.persistence.*;
+import jakarta.persistence.*; // JPA
 import java.util.List;
 
 @Entity

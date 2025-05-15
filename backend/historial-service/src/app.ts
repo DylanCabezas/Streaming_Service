@@ -11,8 +11,11 @@ import cors from "cors";
 dotenv.config();
 
 const app = express();
-app.use(cors());
 app.use(express.json());
+
+app.use(cors({origin: "*",              
+  methods: ["GET","POST","PUT","DELETE","OPTIONS"]}));
+app.use("/historial", historialRoutes);
 
 const swaggerDocument = YAML.load(path.join(__dirname, "../swagger.yaml"));
 app.use(
@@ -20,7 +23,6 @@ app.use(
   swaggerUi.serve as unknown as RequestHandler,
   swaggerUi.setup(swaggerDocument) as unknown as RequestHandler
 );
-app.use("/historial", historialRoutes);
 
 // Conexión a MongoDB
 mongoose
