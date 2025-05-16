@@ -1,7 +1,7 @@
 const API_CONFIG = {
   // Auth Service
   AUTH_SERVICE: {
-    BASE_URL: process.env.REACT_APP_AUTH_SERVICE_URL || 'http://localhost:8000/api',
+    BASE_URL: process.env.REACT_APP_AUTH_SERVICE_URL || 'http://34.235.32.210:8001/api',
     ENDPOINTS: {
       LOGIN: '/auth/login',
       REGISTER: '/auth/register',
@@ -13,7 +13,7 @@ const API_CONFIG = {
 
   // Content Service
   CONTENT_SERVICE: {
-    BASE_URL: process.env.REACT_APP_CONTENT_SERVICE_URL || 'http://localhost:8080/api',
+    BASE_URL: process.env.REACT_APP_CONTENT_SERVICE_URL || 'http://34.235.32.210:8001/api',
     ENDPOINTS: {
       MOVIES: '/movies',
       SERIES: '/series',
@@ -24,7 +24,7 @@ const API_CONFIG = {
 
   // User Service
   USER_SERVICE: {
-    BASE_URL: process.env.REACT_APP_USER_SERVICE_URL || 'http://localhost:8001/api',
+    BASE_URL: process.env.REACT_APP_USER_SERVICE_URL || 'http://34.235.32.210:8001/api',
     ENDPOINTS: {
       CREATE_USER: '/user', 
       GET_USERS: '/users',  
@@ -39,7 +39,7 @@ const API_CONFIG = {
 
   // Payment Service
   PAYMENT_SERVICE: {
-    BASE_URL: process.env.REACT_APP_PAYMENT_SERVICE_URL || 'http://localhost:3004/api',
+    BASE_URL: process.env.REACT_APP_PAYMENT_SERVICE_URL || 'http://34.235.32.210:8001/api',
     ENDPOINTS: {
       SUBSCRIPTIONS: '/payments/subscriptions',
       PLANS: '/payments/plans',
@@ -49,7 +49,7 @@ const API_CONFIG = {
 
   // History Service
   HISTORIAL_SERVICE: {
-    BASE_URL: process.env.REACT_APP_HISTORIAL_SERVICE_URL || 'http://localhost:5000/api',
+    BASE_URL: process.env.REACT_APP_HISTORIAL_SERVICE_URL || 'http://34.235.32.210:8001/api',
     ENDPOINTS: {
       GET_HISTORIAL: '/historial',
       ADD_HISTORIAL: '/historial',
